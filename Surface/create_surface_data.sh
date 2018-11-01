@@ -1,0 +1,54 @@
+###  Load Parameters file  ###
+source ../Parameters_for_curved_surfaces.sh
+
+##################################
+##################################
+###  Output
+Subxyz=surface_sigma_${Sur_sigma}_inc_${Sur_inc}.xyz
+
+if [ $Sur_GRD_data = "1" ] ; then
+    if [ ! -f tempfile/cutted.grd ] ; then
+        grdcut $Sur_input_data -Gtempfile/cutted.grd -R${X1}/${X2}/${Y1}/${Y2}
+    fi
+    grd2xyz tempfile/cutted.grd | gawk '{print ($1-('"$Lon_ref"'))*109*1e3, ($2-('"$Lat_ref"'))*111*1e3, $3}' >  tempfile/topo.xyz
+else
+    gawk '{if($1>= '"${X1}"' && $1<= '"${X2}"' && $2>= '"${Y1}"' && $2<='"${Y2}"') print ($1-('"$Lon_ref"'))*109*1e3, ($2-('"$Lat_ref"'))*111*1e3, $3}' ${input_data} > tempfile/topo.xyz
+fi
+
+#####################################
+#####      Smooth the data     ######
+#####################################
+$Run_python python_scripts/Smooth_slab.py -p  tempfile/topo.xyz  $Sur_sigma $Sur_inc  > tempfile/${Subxyz}
+
+#####################################
+#####   Create jou file        ######
+#####################################
+dimension=`$Run_python  python_scripts/Dimension.py -p  tempfile/${Subxyz}`
+echo "Topography data dimension:" $dimension
+$Run_python python_scripts/slab_interface_netsurf.py -p  tempfile/${Subxyz} ${dimension}   CUBIT_jou/surface_sigma_${Sur_sigma}_inc_${Sur_inc}.jou  ../output/surface_sigma_${Sur_sigma}_inc_${Sur_inc}.sat 
+
+#####################################
+#####   Create sat file        ######
+#####################################
+$Run_python python_scripts/playback_jou.py -p  CUBIT_jou/surface_sigma_${Sur_sigma}_inc_${Sur_inc}.jou
+
+#####################################
+#####      Map to figure       ######
+#####################################
+makecpt -Crelief  -T-8000/8000/100 -N > temp.cpt
+### Original data
+grdimage tempfile/cutted.grd   -R${X1}/${X2}/${Y1}/${Y2} -JX4i -B0.5f0.1/0.5f0.1:."Original topography":WSne -Ctemp.cpt -K -Q > ps/${Sur_sigma}_${Sur_inc}_topography.eps
+grdcontour tempfile/cutted.grd   -R -J -C500 -A- -O -K >> ps/${Sur_sigma}_${Sur_inc}_topography.eps
+### Smoothed data
+LowerX=`gawk 'BEGIN{print ('"$X1"'-'"$Lon_ref"')*109*1e3}'`
+UpperX=`gawk 'BEGIN{print ('"$X2"'-'"$Lon_ref"')*109*1e3}'`
+LowerY=`gawk 'BEGIN{print ('"$Y1"'-'"$Lat_ref"')*111*1e3}'`
+UpperY=`gawk 'BEGIN{print ('"$Y2"'-'"$Lat_ref"')*111*1e3}'`
+pscontour tempfile/${Subxyz}  -R${LowerX}/${UpperX}/${LowerY}/${UpperY} -B50000f10000:."Smoothed topography":WSne -J -Ctemp.cpt -I -A- -O -K -X5i  >> ps/${Sur_sigma}_${Sur_inc}_topography.eps
+pscontour tempfile/${Subxyz}  -R${LowerX}/${UpperX}/${LowerY}/${UpperY}  -J -C500 -Wthinnest -A- -O   >> ps/${Sur_sigma}_${Sur_inc}_topography.eps
+
+
+ps2pdf ps/${Sur_sigma}_${Sur_inc}_topography.eps ps/${Sur_sigma}_${Sur_inc}_topography.pdf
+rm ps/${Sur_sigma}_${Sur_inc}_topography.eps temp.cpt  gmt.history -f
+
+
