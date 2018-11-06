@@ -71,6 +71,8 @@ mesh_scheme    = "map"
 # Higer order nodes can be moved to curved geometry by defaut, if set Node Constraint ON.
 #element_type = "HEX8"
 element_type = "HEX27"
+# Refine the mesh of fault. fault_refine_numsplit=0 indicate  no refinement. fault_refine_numsplit (int) indicates how many times to subdivide the elements on fault.  
+fault_refine_numsplit = 0
 
 # Set up the upper and lower depth of seimogenic zone. Noted that the rupture cannot propogate to the free surface here. But it is not difficult to revise this code to allow free-surface ruptures.
 Upper_cutoff   = -3
@@ -236,6 +238,8 @@ elif(mesh_scheme == "map"):
 else:
     print "Error mesh scheme!"
     exit()
+if(fault_refine_numsplit > 0):
+    j.write("refine surface fault1 NumSplit $f\n" % fault_refine_numsplit)
 
 j.write("# ----------------------------------------------------------------------\n" + \
             "# Smooth mesh to improve quality.\n" + \
