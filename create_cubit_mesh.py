@@ -239,7 +239,7 @@ else:
     print "Error mesh scheme!"
     exit()
 if(fault_refine_numsplit > 0):
-    j.write("refine surface fault1 NumSplit $f\n" % fault_refine_numsplit)
+    j.write("refine surface fault1 NumSplit %f\n" % fault_refine_numsplit)
 
 j.write("# ----------------------------------------------------------------------\n" + \
             "# Smooth mesh to improve quality.\n" + \
