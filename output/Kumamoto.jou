@@ -22,14 +22,17 @@ ${moveY= 0.000000 *km}
 ${moveZ= 0.000000 *km}
 volume {idVol1} move x {moveX} y {moveY} z {moveZ}
 # ----------------------------------------------------------------------
-# Import interface data.
+# Create planar interface.
 # ----------------------------------------------------------------------
-import Acis '/u/moana/user/weng/Weng/Kumamoto/mesh/3D_CUBIT_mesh/output/interface_sigma_1_inc_12.sat'
+create planar surface zplane
 ${idInt=Id('surface')}
+rotate surface {idInt} about Y angle 60.000000
+rotate surface {idInt} about Z angle 90.000000
+surface {idInt} move z {-10.000000}
 # ----------------------------------------------------------------------
-# Import topography data
+# Create planar free surface.
 # ----------------------------------------------------------------------
-import Acis '/u/moana/user/weng/Weng/Kumamoto/mesh/3D_CUBIT_mesh/output/surface_sigma_1_inc_12.sat'
+create planar surface zplane
 ${idSur=Id('surface')}
 # ----------------------------------------------------------------------
 # Create bottom surface.
@@ -47,7 +50,7 @@ webcut volume {idVol3} with plane Zplane offset {-30.000000 *km}
 ${idVol4=Id('volume')}
 webcut volume {idVol4} with sheet surface {idBot}
 ${idVol5=Id('volume')}
-webcut volume {idVol3} with sheet surface {idInt}
+webcut volume {idVol3} with plane surface {idInt}
 ${idVol6=Id('volume')}
 find surface overlap volume {idVol3} {idVol6}
 ${idF1=GroupMemberId('surf_overlap','surface',0)}
@@ -70,6 +73,7 @@ volume all scheme map
 volume all size {20.000000*km}
 mesh volume {idVol3} {idVol6}
 mesh volume all
+refine surface fault1 NumSplit 2 depth 2
 # ----------------------------------------------------------------------
 # Smooth mesh to improve quality.
 # ----------------------------------------------------------------------

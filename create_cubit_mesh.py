@@ -31,8 +31,8 @@ from geocubitlib import cubit2specfem3d
 
 # If DEBUG is True, then this script only create CUBIT script, otherwise create CUBIT script and mesh file.
 # It is recommended to debug this script by GUI of CUBIT before to create Specfem3D mesh.
-#DEBUG          = True
-DEBUG          = False
+DEBUG          = True
+#DEBUG          = False
 
 # The dimension of model box (km)
 Length         = 120   
@@ -45,8 +45,8 @@ Center_Y       = 0
 work_dir       = os.getcwd()
 # If Interface is False, then use planar fault (given by the strike, dip, and dep). Otherwise run the scripts in ./Interface and give the path of the created interface (in the directory ./output)
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
-Interface      = True
-Topography     = True
+Interface      = False
+Topography     = False
 Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
 Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
 Strike         = 90
@@ -72,7 +72,9 @@ mesh_scheme    = "map"
 #element_type = "HEX8"
 element_type = "HEX27"
 # Refine the mesh of fault. fault_refine_numsplit=0 indicate  no refinement. fault_refine_numsplit (int) indicates how many times to subdivide the elements on fault.  
-fault_refine_numsplit = 0
+# fault_refine_depth indicate the number of layers for refinement.
+fault_refine_numsplit = 2
+fault_refine_depth    = 2
 
 # Set up the upper and lower depth of seimogenic zone. Noted that the rupture cannot propogate to the free surface here. But it is not difficult to revise this code to allow free-surface ruptures.
 Upper_cutoff   = -3
@@ -239,7 +241,7 @@ else:
     print "Error mesh scheme!"
     exit()
 if(fault_refine_numsplit > 0):
-    j.write("refine surface fault1 NumSplit %f\n" % fault_refine_numsplit)
+    j.write("refine surface fault1 NumSplit {0:.0f} depth {0:.0f}\n".format(fault_refine_numsplit,fault_refine_depth))
 
 j.write("# ----------------------------------------------------------------------\n" + \
             "# Smooth mesh to improve quality.\n" + \
