@@ -73,7 +73,7 @@ volume all scheme map
 volume all size {20.000000*km}
 mesh volume {idVol3} {idVol6}
 mesh volume all
-refine surface fault1 NumSplit 2 depth 2
+refine surface fault1 NumSplit 1 depth 5
 # ----------------------------------------------------------------------
 # Smooth mesh to improve quality.
 # ----------------------------------------------------------------------

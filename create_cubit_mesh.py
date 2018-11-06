@@ -73,8 +73,8 @@ mesh_scheme    = "map"
 element_type = "HEX27"
 # Refine the mesh of fault. fault_refine_numsplit=0 indicate  no refinement. fault_refine_numsplit (int) indicates how many times to subdivide the elements on fault.  
 # fault_refine_depth indicate the number of layers for refinement.
-fault_refine_numsplit = 2
-fault_refine_depth    = 2
+fault_refine_numsplit = 0
+fault_refine_depth    = 5
 
 # Set up the upper and lower depth of seimogenic zone. Noted that the rupture cannot propogate to the free surface here. But it is not difficult to revise this code to allow free-surface ruptures.
 Upper_cutoff   = -3
@@ -241,7 +241,7 @@ else:
     print "Error mesh scheme!"
     exit()
 if(fault_refine_numsplit > 0):
-    j.write("refine surface fault1 NumSplit {0:.0f} depth {0:.0f}\n".format(fault_refine_numsplit,fault_refine_depth))
+    j.write("refine surface fault1 NumSplit {0} depth {1}\n".format(fault_refine_numsplit,fault_refine_depth))
 
 j.write("# ----------------------------------------------------------------------\n" + \
             "# Smooth mesh to improve quality.\n" + \
