@@ -21,11 +21,11 @@ Ynum        =   read_data.shape[0] / Xnum
 grid_x,grid_y = numpy.mgrid[read_data[0,0]:read_data[-1,0]:(Xnum)*1j, read_data[0,1]:read_data[-1,1]:(Ynum)*1j]
 Grid_data     = griddata(read_data[:,0:2], read_data[:,2], (grid_x,grid_y), method='linear')
 
-smooth_data   = gaussian_filter(Grid_data, sigma)
+smooth_data   = gaussian_filter(Grid_data, sigma, mode='nearest')
 
 for y in range(Ynum):
   for x in range(Xnum):
-    if(x%inc == 0 and y%inc == 0):
+    if(x%inc == 0 and y%inc == 0 and not numpy.math.isnan(smooth_data[x,y])):
         print grid_x[x,y], grid_y[x,y], smooth_data[x,y]
 
 

@@ -1,5 +1,5 @@
-This code is used for creating a 3D mesh (see schematic diagram) for Specfem3D. It creates four blocks by cutting a long cube with free surface, fault and several planes. The free surface and fault could be planar or curved surface, by setting Interface and Topography as True or False in ./create_cubit_mesh.py.
-Blocks 2 and 4 are the seismogenic layer, bounded by upper and lower seismogenic planes. Please set up the parameters, Upper_cutoff and Lower_cutoff, in the script.  
+This code is used for creating a 3D mesh (see schematic diagram) for Specfem3D. It creates four blocks by cutting a long cube with free surface, fault and several planes. The free surface and fault could be planar or curved surface, by setting Interface and Topography as False or True in ./create_cubit_mesh.py.
+Blocks 2 and 4 are the seismogenic layer, bounded by upper and lower seismogenic planes. Please set up the parameters of seismogenic layer, Upper_cutoff and Lower_cutoff, in the script.  
 
     ~~~\/\/\/\/\~~~/\/\/\/\/~~~~ 
    /                           /|
@@ -20,12 +20,13 @@ Blocks 2 and 4 are the seismogenic layer, bounded by upper and lower seismogenic
 Huihui Weng, Postdoc in Geoazur UCA, contact me by weng@geoazur.unice.fr or qfkq7850@mail.ustc.edu.cn. Oct. 31 2018
 
 
-Software and packages requirements:
+Software and package requirements:
   CUBIT (or Trelis)
   GEOCUBIT (a package provided in the Specfem3D code in the directory: specfem3d-master/CUBIT_GEOCUBIT/)
   Python and Python packages: numpy and scipy
   GMT (No need if both free surface and fault are planar. For GMT 5+ you need to add "gmt" in all the GMT commands in the scripts: ./Surface/create_surface_data.sh and ./Interface/create_interface_data.sh)
 
+It is better to set up the path of CUBIT and GEOCUBIT from ~/.bashrc or ~/.bash_profile. In this case, you can import these two Python packages easily.
 Commands for testing the necessary python packages:
   > python
   Python 2.7.13 (default, Jan 03 2017, 17:41:54) [GCC] on linux2
@@ -34,6 +35,7 @@ Commands for testing the necessary python packages:
   >>> import scipy
   >>> import cubit
   >>> import geocubitlib
+If not, you need to provide the lib path in the scripts ./create_cubit_mesh.py and ./python_scripts/playback_jou.py by the line: sys.path.append('PATH to LIBS').
 
 
 
@@ -42,48 +44,50 @@ Step-by-step procedure
 1. Do you need curved free surface or fault? 
 If yes, please set up the ranges and reference point of the model in geographical coordinates in ./Parameters_for_curved_surfaces.sh. Note that the range of the longitude and latitude shall be larger than the actual model range. It is a good choice to set the epicenter as the reference point, i.e., the original point in Cartesian coordinates.
 
-For creating a curve surface, you need to setup 4 parameters in ./Parameters_for_curved_surfaces.sh:
-Sur_GRD_data     determine a grid-format data or a xyz-format data
-Sur_input_data   path of the data
-Sur_inc          For grid-format data, we increase the sample rate of grid data, otherwise it requires long time for creating a .sat file.
-Sur_sigma        For the smooth process
+For creating a curved free surface, you need to setup 4 parameters in ./Parameters_for_curved_surfaces.sh:
+Sur_GRD_data     Use a grid-format data or a xyz-format data
+Sur_input_data   Path of the data
+Sur_inc          For grid-format data, we increase the sample rate of grid data, otherwise it need a long time for CUBIT to create a .sat file.
+Sur_sigma        Parameter for the smooth process
 
-For creating a curve fault, you need to setup 5 parameters in ./Parameters_for_curved_surfaces.sh:
-Int_GRD_data     determine a grid-format data or a xyz-format data
-Int_input_data   path of the data
-Int_inc          For grid-format data, we increase the sample rate of grid data, otherwise it requires long time for creating a .sat file.
-Int_sigma        For the smooth process
-Int_sample_inc   The sample interval for the xyz-format data
+For creating a curved fault, you need to setup 5 parameters in ./Parameters_for_curved_surfaces.sh:
+Int_GRD_data     Use a grid-format data or a xyz-format data
+Int_input_data   Path of the data
+Int_inc          For grid-format data, we increase the sample rate of grid data, otherwise it need a long time for CUBIT to create a .sat file.
+Int_sigma        Paremeter for the smooth process
+Int_sample_inc   The sample interval for the xyz-format data. This parameters depends on the slip model (for example Yue Han's model). For other slip model, one needs to change the 
 
 The global topography data can be downloaded from NOAA https://www.ngdc.noaa.gov/mgg/topo/topo.html. Put the downloaded data in the directory ./Surface/data
 The fault interface data can be downloaded from USGS https://earthquake.usgs.gov/data/slab/models.php. Put the downloaded data in the directory ./Interface/data
 
-Run the script ./Surface/create_surface_data.sh to create the .sat file (CUBIT-format file) by typing:
+Run the scripts ./Surface/create_surface_data.sh and ./Interface/create_interface_data.sh to create the .sat files (CUBIT-format file) by typing:
    cd ./Surface
    sh create_surface_data.sh
    cd ..
    cd ./Interface
    sh create_interface_data.sh
    cd ..
-You can check the quality of mesh by the created *.jou script (CUBIT script) in ./Surface/CUBIT_jou/ and ./Interface/CUBIT_jou/ under the GUI of CUBIT (for debug). It is recommanded to change different sample interval and smooth factor and create a lot surface for later usage. The created free surface and fault are saved as *.sat in ../output/
+You can check the quality of mesh by the created *.jou script (CUBIT script) in ./Surface/CUBIT_jou/ and ./Interface/CUBIT_jou/ under the GUI of CUBIT (for debug). It is recommanded to change different sample interval and smooth factor to create a lot surface for later usage. The created free surface and fault are saved as *.sat in ../output/
 In the directories ./Surface/ps and ./Interface/ps, you can check the effect of smoothing from the GMT figures. 
+
 
 2. If you need to use curved free surface and fault, set Interface = True or Topography = True, then provide the created file by
 Int_name       = work_dir + "/output/interface_sigma_3_inc_6.sat"
 Top_name       = work_dir + "/output/surface_sigma_0_inc_8.sat"
 
 For planar free surface, set Topography = False
-For planar fault, set Interface = False, and you need to set the strike, dip and depth of the fault. Firstly, create a Zplane, then rotate about Y axis with angle Dip, rotate about Z axis with angle Strike, and finally move along Z direction with distance Dep
+For planar fault, set Interface = False, and you need to set the strike, dip and depth of the fault. Firstly, the python script creates a Zplane, then rotates about Y axis with angle Dip, rotates about Z axis with angle Strike, and finally moves along Z direction with distance Dep
 For example:
 Strike         = 90
 Dip            = 60
 Dep            = -10
 
-Set up other parameters in the first section of create_cubit_mesh.py (there are comments), such as dimension of model, materials properties, mesh scheme, and output name. 
+Set up other parameters in the first section of create_cubit_mesh.py (there are comments), such as dimension of model, materials properties, mesh scheme, mesh size, and output name. 
+
 
 3. Run the script by type
    python create_cubit_mesh.py
-The created files are seved in the directory ./output
+The created files are seved in the directory ./output/model_name
 
 If you have any question or comment, please feel free to contact me.
 

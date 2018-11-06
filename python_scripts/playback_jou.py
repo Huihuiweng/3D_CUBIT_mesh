@@ -4,9 +4,13 @@ import sys
 sys.path.append('/opt/linux64/Trelis-14.0/bin/')
 
 import cubit
+
+print  "Init CUBIT..."
 try:
+    # output all the information to the screen.
     #cubit.init([""])
-    cubit.init(["-noecho","-nojournal"])
+    # comment all the outout information and warning to the screen.
+    cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
 except:
     pass
 
@@ -16,9 +20,11 @@ for i in range(len(sys.argv)):                        # read parameter from shel
 input_file = P1
 
 
+print  "Begin to playback the CUBIT script..."
 ###  Read the CUBIT journal and playback it.
 with open(input_file) as f:
     content = f.readlines()
 for line in content:
     cubit.cmd(line)
 
+print  "Finish playback..."

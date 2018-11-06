@@ -14,25 +14,31 @@ Lat_ref=32.76
 # Python path
 # Or set up the full path for python manually in your system
 Run_python=`which python`
+Work_dir="/u/moana/user/weng/Weng/Kumamoto/mesh/3D_CUBIT_mesh/"
 
 ###  Input data for curved surface
 #GRD_data=0           # do not use grid data
 Sur_GRD_data=1           # do use grid data
-Sur_input_data="/u/moana/user/weng/Weng/Kumamoto/mesh/CUBIT_scripts/Surface/data/topo15.grd "
+Sur_input_data="${Work_dir}/Surface/data/topo15.grd"
 ###  Smooth parameters
 # Resample interval
-Sur_inc=32
+Sur_inc=12
 # Smooth parameter
-Sur_sigma=0
+Sur_sigma=1
 
 ###  Input data for curved surface
 Int_GRD_data=0           # do not use grid data
 #GRD_data=1           # do use grid data
-Int_input_data="/u/moana/user/weng/Weng/Kumamoto/mesh/CUBIT_scripts/Interface/data/Slip_model_kumamoto.dat"
+Int_input_data="${Work_dir}/Interface/data/Slip_model_kumamoto.dat"
 ###  Smooth parameters
-Int_inc=6
-Int_sigma=3
-Int_sample_inc=0.05
+Int_inc=12
+Int_sigma=1
+Int_sample_inc=0.007
 
 
+
+### Don't need to change 
+Earth_radius="6371.0"
+Lon_scale=`gawk 'BEGIN{print cos('"$Lat_ref"'/180.0*3.1415926)*3.1415926*'"$Earth_radius"'/180.0}'`
+Lat_scale=`gawk 'BEGIN{print 3.1415926*'"$Earth_radius"'/180.0}'`
 

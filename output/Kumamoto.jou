@@ -24,12 +24,12 @@ volume {idVol1} move x {moveX} y {moveY} z {moveZ}
 # ----------------------------------------------------------------------
 # Import interface data.
 # ----------------------------------------------------------------------
-import Acis '/u/moana/user/weng/Weng/Kumamoto/mesh/CUBIT_scripts/output/interface_sigma_3_inc_6.sat'
+import Acis '/u/moana/user/weng/Weng/Kumamoto/mesh/3D_CUBIT_mesh/output/interface_sigma_1_inc_12.sat'
 ${idInt=Id('surface')}
 # ----------------------------------------------------------------------
 # Import topography data
 # ----------------------------------------------------------------------
-import Acis '/u/moana/user/weng/Weng/Kumamoto/mesh/CUBIT_scripts/output/surface_sigma_0_inc_32.sat'
+import Acis '/u/moana/user/weng/Weng/Kumamoto/mesh/3D_CUBIT_mesh/output/surface_sigma_1_inc_12.sat'
 ${idSur=Id('surface')}
 # ----------------------------------------------------------------------
 # Create bottom surface.
@@ -82,8 +82,8 @@ surface {idF2} name 'fault2'
 # Seperate nodes on fault.
 # ----------------------------------------------------------------------
 set node constraint off
-node in surface fault1 move X {-1*m}
-node in surface fault2 move X {1*m}
+node in surface fault1 move X {-0.01*m}
+node in surface fault2 move X {0.01*m}
 compress all
 set node constraint on
 # End of file

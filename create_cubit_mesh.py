@@ -12,9 +12,12 @@ sys.path.append('/opt/linux64/Trelis-14.0/bin/')
 sys.path.append('/opt/linux64/specfem3d/CUBIT_GEOCUBIT/')
 
 import cubit
+print "Init CUBIT..."
 try:
-    #cubit.init([""])
-    cubit.init(["-noecho","-nojournal"])
+    # print all the information to the screen.
+    # cubit.init([""])
+    # stop all the outout information and warnings to the screen.
+    cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
 except:
     pass
 from geocubitlib import absorbing_boundary
@@ -44,8 +47,8 @@ work_dir       = os.getcwd()
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
 Interface      = True
 Topography     = True
-Int_name       = work_dir + "/output/interface_sigma_3_inc_6.sat"
-Top_name       = work_dir + "/output/surface_sigma_0_inc_32.sat"
+Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
+Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
 Strike         = 90
 Dip            = 60
 Dep            = -10
@@ -74,8 +77,8 @@ Upper_cutoff   = -3
 Lower_cutoff   = -30
 # The name of CUBIT script. One can run this script under the GUI of CUBIT for debuging. This python code will run this script without GUI.
 journalFile    = "./output/Kumamoto.jou"
-# The name of created mesh directory for Specfem3D
-mesh_name      = "Kumamoto_meshfile"
+# The name (prefix name) of created mesh directory for Specfem3D. The full name is the prefix name + features of fault and free surface.
+mesh_name      = "Kumamoto"
 #=====================================
 
 
@@ -85,6 +88,7 @@ mesh_name      = "Kumamoto_meshfile"
 # There is no need to change anything below. If you need to change something,
 # please send me an email. I will try to make it more automatic.
 #
+print "Initial check..."
 # Initial check
 if(not os.path.isfile(Int_name) and Interface):
     print "The interface data does not exis!!! Please create it in ./Interface."
@@ -111,7 +115,11 @@ elif(Interface and not Topography):
 else:
     output_mesh    = mesh_name + "_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_planarsur"
 
+# Add the info of mesh scheme 
+output_mesh = output_mesh + "_" + str(grid_size) + "_" + element_type
+
 # Create the journal file for debuging
+print "Create journal file..."
 j = open(journalFile, 'w')
 j.write("# Journal file formatting, etc.\n" + \
             "# ----------------------------------------------------------------------\n" + \
@@ -243,8 +251,8 @@ j.write("# ---------------------------------------------------------------------
             "# Seperate nodes on fault.\n" + \
             "# ----------------------------------------------------------------------\n")
 j.write("set node constraint off\n")
-j.write("node in surface fault1 move X {-1*m}\n")
-j.write("node in surface fault2 move X {1*m}\n")
+j.write("node in surface fault1 move X {-0.01*m}\n")
+j.write("node in surface fault2 move X {0.01*m}\n")
 j.write("compress all\n")
 j.write("set node constraint on\n")
 
@@ -257,6 +265,7 @@ if(DEBUG):
 # ==================================================
 #        Read the CUBIT journal and playback it.
 # ==================================================
+print "Playback journal file..."
 with open(journalFile) as f:
     content = f.readlines()
 for line in content:
@@ -266,7 +275,8 @@ for line in content:
 #         Save the mesh to txt files
 #      This part is revised from the code of Specfem3D
 # ==================================================
-
+print ""
+print "Convert mesh to Specfem-format..."
 os.system('mkdir -p MESH')
 
 ## fault surfaces (up/down)
@@ -340,8 +350,9 @@ else:
 # You need to create fault mesh file in the last, if using hex27.
 faultA = save_fault_nodes_elements.fault_input(1,Au,Ad)
 
+print "Save created mesh..."
 # Save create directory as given name
-os.system('rm -rf ' + output_mesh)
+os.system('rm -rf  output/' + output_mesh)
 os.system('mv MESH output/' + output_mesh)
 
 # End of script
