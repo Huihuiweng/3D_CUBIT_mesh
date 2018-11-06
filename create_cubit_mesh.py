@@ -31,8 +31,8 @@ from geocubitlib import cubit2specfem3d
 
 # If DEBUG is True, then this script only create CUBIT script, otherwise create CUBIT script and mesh file.
 # It is recommended to debug this script by GUI of CUBIT before to create Specfem3D mesh.
-DEBUG          = True
-#DEBUG          = False
+#DEBUG          = True
+DEBUG          = False
 
 # The dimension of model box (km)
 Length         = 120   
