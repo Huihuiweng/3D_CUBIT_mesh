@@ -4,7 +4,7 @@ The Box model creates four blocks by cutting a long cube with free surface, faul
 Blocks 2 and 4 are the seismogenic layer, bounded by upper and lower seismogenic planes. Please set up the parameters of seismogenic layer, Upper_cutoff and Lower_cutoff, in the script create_box_mesh.py.  
 
 The semi-sphere model creates three blocks. We firstly cut a cylinder with free surface, fault interface and plane (lower seismogenic layer). The semi-sphere is created by cutting a sphere with the free surfce, then subtract block 1 and 2 from the semi-sphere to obtain block 3. Finally we merge all blocks. 
-Block 1 and 2 have a finite seismogenic layer. Please set up Lower_cutoff of seismogenic layer in the script create_semisphere_mesh.py.
+Block 1 and 2 have a finite seismogenic layer. The fault can cut through the free surface in this model. Please set up Lower_cutoff of seismogenic layer in the script create_semisphere_mesh.py.
   
       ~~~\/\/\/\/\~~~/\/\/\/\/~~~~ 
      /                           /|
