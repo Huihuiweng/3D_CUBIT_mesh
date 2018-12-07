@@ -24,16 +24,16 @@ Block 1 and 2 have a finite seismogenic layer. The fault can cut through the fre
   
   Box model
   
-  ~~~~~~~\/\/\/\~~~/\~~~/\/\/\/~~~~~~~~
-  *              |    __|              *
-  *              |1 /   |              *
-   *             |  / 2 |             *
-     *           |/     |           *
+  ~~~~~~~\/\/\/\~~~/\~~~~~/\/\/\/~~~~~~~~
+  *              |    /  |              *
+  *              |1 /    |              *
+   *             |  / 2  |             *
+     *           |/      |           *
        *         --------         *
          *                      *
            *          3       *
               *            *
-                  *****
+                  *******
 
    Semi-sphere model            
                 
