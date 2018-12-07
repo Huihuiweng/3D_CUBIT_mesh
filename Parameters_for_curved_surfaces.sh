@@ -5,7 +5,7 @@
 # Lon_ref and Lat_ref are the reference point (i.e., (0,0) in Cartesian coordinates)
 # It is a good choice to set up it as the epicenter.
 X1=130.0
-X2=131.5
+X2=132.5
 Y1=32.2
 Y2=33.7
 Lon_ref=130.76
@@ -19,10 +19,10 @@ Work_dir="/u/moana/user/weng/Weng/Kumamoto/mesh/3D_CUBIT_mesh/"
 ###  Input data for curved surface
 #GRD_data=0           # do not use grid data
 Sur_GRD_data=1           # do use grid data
-Sur_input_data="${Work_dir}/Surface/data/topo15.grd"
+Sur_input_data="${Work_dir}/Surface/data/ETOPO1_Ice_g_gmt4_downsample.grd"
 ###  Smooth parameters
 # Resample interval
-Sur_inc=12
+Sur_inc=1
 # Smooth parameter
 Sur_sigma=1
 

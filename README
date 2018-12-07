@@ -1,23 +1,46 @@
-This code is used for creating a 3D mesh (see schematic diagram) for Specfem3D. It creates four blocks by cutting a long cube with free surface, fault and several planes. The free surface and fault could be planar or curved surface, by setting Interface and Topography as False or True in ./create_cubit_mesh.py.
-Blocks 2 and 4 are the seismogenic layer, bounded by upper and lower seismogenic planes. Please set up the parameters of seismogenic layer, Upper_cutoff and Lower_cutoff, in the script.  
+This code is used for creating a 3D mesh (Box and semi-sphere models, see schematic diagram) for Specfem3D. 
 
-    ~~~\/\/\/\/\~~~/\/\/\/\/~~~~ 
-   /                           /|
-  /      Free surface         / |
- /                           / /|
- ~~~\/\/\/\/\~~~/\/\/\/\/~~~/ / |
-|         1                 |/  |
- ---------------------------/   |
-|            /              |   |
-|           /Fault          |  /|
-|    2      \         4     | / |
-|          /                |/  |
- ---------/-----------------/  / 
-|                           | /  
-|            3              |/   
- ---------------------------/  
+The Box model creates four blocks by cutting a long cube with free surface, fault and several planes. The free surface and fault could be planar or curved surface, by setting Interface and Topography as False or True in ./create_box_mesh.py.
+Blocks 2 and 4 are the seismogenic layer, bounded by upper and lower seismogenic planes. Please set up the parameters of seismogenic layer, Upper_cutoff and Lower_cutoff, in the script create_box_mesh.py.  
+
+The semi-sphere model creates three blocks. We firstly cut a cylinder with free surface, fault interface and plane (lower seismogenic layer). The semi-sphere is created by cutting a sphere with the free surfce, then subtract block 1 and 2 from the semi-sphere to obtain block 3. Finally we merge all blocks. 
+Block 1 and 2 have a finite seismogenic layer. Please set up Lower_cutoff of seismogenic layer in the script create_semisphere_mesh.py.
+  
+      ~~~\/\/\/\/\~~~/\/\/\/\/~~~~ 
+     /                           /|
+    /      Free surface         / |
+   /                           / /|
+   ~~~\/\/\/\/\~~~/\/\/\/\/~~~/ / |
+  |         1                 |/  |
+   ---------------------------/   |
+  |            /              |   |
+  |           /Fault          |  /|
+  |    2      \         4     | / |
+  |          /                |/  |
+   ---------/-----------------/  / 
+  |                           | /  
+  |            3              |/   
+   ---------------------------/  
+  
+  Box model
+  
+  ~~~~~~~\/\/\/\~~~/\~~~/\/\/\/~~~~~~~~
+  *              |    __|              *
+  *              |1 /   |              *
+   *             |  / 2 |             *
+     *           |/     |           *
+       *         --------         *
+         *                      *
+           *          3       *
+              *            *
+                  *****
+
+   Semi-sphere model            
+                
 
 Huihui Weng, Postdoc in Geoazur UCA, contact me by weng@geoazur.unice.fr or qfkq7850@mail.ustc.edu.cn. Oct. 31 2018
+Added semi-sphere model and revised the bugs in the box model. Dec. 7 2018
+Thank Jean-Paul Ampuero for his helpful suggestion.
 
 
 Software and package requirements:
@@ -35,7 +58,7 @@ Commands for testing the necessary python packages:
   >>> import scipy
   >>> import cubit
   >>> import geocubitlib
-If not, you need to provide the lib path in the scripts ./create_cubit_mesh.py and ./python_scripts/playback_jou.py by the line: sys.path.append('PATH to LIBS').
+If not, you need to provide the lib path in the scripts ./create_box_mesh.py and ./python_scripts/playback_jou.py by the line: sys.path.append('PATH to LIBS').
 
 
 
@@ -57,7 +80,7 @@ Int_inc          For grid-format data, we increase the sample rate of grid data,
 Int_sigma        Paremeter for the smooth process
 Int_sample_inc   The sample interval for the xyz-format data. This parameters depends on the slip model (for example Yue Han's model). For other slip model, one needs to change the 
 
-The global topography data can be downloaded from NOAA https://www.ngdc.noaa.gov/mgg/topo/topo.html. Put the downloaded data in the directory ./Surface/data
+The global topography data can be downloaded from NOAA https://www.ngdc.noaa.gov/mgg/topo/topo.html. Put the downloaded data in the directory ./Surface/data . This script only use ETOPO data (netCDF format).GMT command can process netCDF format data. grd2xyz can convert netCDF data to xyz data.
 The fault interface data can be downloaded from USGS https://earthquake.usgs.gov/data/slab/models.php. Put the downloaded data in the directory ./Interface/data
 
 Run the scripts ./Surface/create_surface_data.sh and ./Interface/create_interface_data.sh to create the .sat files (CUBIT-format file) by typing:
@@ -82,11 +105,13 @@ Strike         = 90
 Dip            = 60
 Dep            = -10
 
-Set up other parameters in the first section of create_cubit_mesh.py (there are comments), such as dimension of model, materials properties, mesh scheme, mesh size, and output name. 
+Set up other parameters in the first section of create_box_mesh.py and create_semisphere_mesh.py (there are comments), such as dimension of model, materials properties, mesh scheme, mesh size, and output name. 
 
 
-3. Run the script by type
-   python create_cubit_mesh.py
+3. Run the script for the box model by type
+   python create_box_mesh.py
+   and for the semi-sphere model by type
+   python create_semisphere_mesh.py
 The created files are seved in the directory ./output/model_name
 
 If you have any question or comment, please feel free to contact me.
