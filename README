@@ -80,7 +80,8 @@ Int_inc          For grid-format data, we increase the sample rate of grid data,
 Int_sigma        Paremeter for the smooth process
 Int_sample_inc   The sample interval for the xyz-format data. This parameters depends on the slip model (for example Yue Han's model). For other slip model, one needs to change the 
 
-The global topography data can be downloaded from NOAA https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/netcdf/ . Put the downloaded data "ETOPO1_Ice_g_gmt4.grd.gz" in the directory ./Surface/data. The data file is large (377MB), which contains the global topography data. If you need a higher resolution topograhpy data, please put it in ./Surface/data and set up its path to the new data in ./Parameters_for_curved_surfaces.sh. There is a low resolution global data in the directory.
+There is a low resolution global topography data in ./Surface/data. The global topography data can be downloaded from NOAA https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/netcdf/ . Put the downloaded data "ETOPO1_Ice_g_gmt4.grd.gz" in the directory ./Surface/data and unzip it by the command "gunzip -k ./Surface/data/ETOPO1_Ice_g_gmt4.grd.gz" (or using other ways to unzip a ~.gz file). The downloaded data file is large (377MB), which contains the global topography data. If you need a higher or lower resolution topograhpy data, please put it in ./Surface/data and set up its path to the new data in ./Parameters_for_curved_surfaces.sh. 
+
 The fault interface data can be downloaded from USGS https://earthquake.usgs.gov/data/slab/models.php. Put the downloaded data in the directory ./Interface/data
 
 Run the scripts ./Surface/create_surface_data.sh and ./Interface/create_interface_data.sh to create the .sat files (CUBIT-format file) by typing:
