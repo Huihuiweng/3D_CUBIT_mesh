@@ -242,6 +242,8 @@ j.write("node in surface fault2 move X {0.01*m} Y {0.01*m} Z {0.01*m}\n")
 j.write("compress all\n")
 j.write("set node constraint on\n")
 
+j.write("draw volume all\n")
+
 j.write("# End of file\n")
 j.close()
 

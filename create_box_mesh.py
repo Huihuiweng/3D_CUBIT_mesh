@@ -76,9 +76,11 @@ element_type = "HEX27"
 fault_refine_numsplit = 0
 fault_refine_depth    = 5
 
-# Set up the upper and lower depth of seimogenic zone. Noted that the rupture cannot propogate to the free surface here. But it is not difficult to revise this code to allow free-surface ruptures.
-Upper_cutoff   = -3
+# Set up the upper and lower depth of seimogenic zone. If Upper_cutoff>=0, then there is not upper seismogenic boundary and the fault cut through the free surface.
+#Upper_cutoff   = -3
+Upper_cutoff   =  0
 Lower_cutoff   = -30
+
 # The name of CUBIT script. One can run this script under the GUI of CUBIT for debuging. This python code will run this script without GUI.
 journalFile    = "./output/Kumamoto.jou"
 # The name (prefix name) of created mesh directory for Specfem3D. The full name is the prefix name + features of fault and free surface.
@@ -192,14 +194,23 @@ j.write("${idBot=Id('surface')}\n")
 j.write("# ----------------------------------------------------------------------\n" + \
         "# Webcut 1 block to 5 blocks.\n" + \
         "# ----------------------------------------------------------------------\n")
-j.write("webcut volume {idVol1} with sheet surface {idSur}\n")
-j.write("${idVol2=Id('volume')}\n")
-j.write("webcut volume {idVol2} with plane Zplane offset {%f *km}\n" % Upper_cutoff)
-j.write("${idVol3=Id('volume')}\n")
-j.write("webcut volume {idVol3} with plane Zplane offset {%f *km}\n" % Lower_cutoff)
-j.write("${idVol4=Id('volume')}\n")
-j.write("webcut volume {idVol4} with sheet surface {idBot}\n")
-j.write("${idVol5=Id('volume')}\n")
+if(Upper_cutoff<0):
+    j.write("webcut volume {idVol1} with sheet surface {idSur}\n")
+    j.write("${idVol2=Id('volume')}\n")
+    j.write("webcut volume {idVol2} with plane Zplane offset {%f *km}\n" % Upper_cutoff)
+    j.write("${idVol3=Id('volume')}\n")
+    j.write("webcut volume {idVol3} with plane Zplane offset {%f *km}\n" % Lower_cutoff)
+    j.write("${idVol4=Id('volume')}\n")
+    j.write("webcut volume {idVol4} with sheet surface {idBot}\n")
+    j.write("${idVol5=Id('volume')}\n")
+else:
+    j.write("webcut volume {idVol1} with sheet surface {idSur}\n")
+    j.write("${idVol3=Id('volume')}\n")
+    j.write("webcut volume {idVol3} with plane Zplane offset {%f *km}\n" % Lower_cutoff)
+    j.write("${idVol4=Id('volume')}\n")
+    j.write("webcut volume {idVol4} with sheet surface {idBot}\n")
+    j.write("${idVol5=Id('volume')}\n")
+
 
 if(Interface):
     j.write("webcut volume {idVol3} with sheet surface {idInt}\n")
@@ -261,6 +272,8 @@ j.write("node in surface fault1 move X {-0.01*m} Y {-0.01*m} Z {-0.01*m}\n")
 j.write("node in surface fault2 move X {0.01*m} Y {0.01*m} Z {0.01*m}\n")
 j.write("compress all\n")
 j.write("set node constraint on\n")
+
+j.write("draw volume all\n")
 
 j.write("# End of file\n")
 j.close()

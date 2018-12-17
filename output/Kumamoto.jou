@@ -43,8 +43,6 @@ ${idBot=Id('surface')}
 # Webcut 1 block to 5 blocks.
 # ----------------------------------------------------------------------
 webcut volume {idVol1} with sheet surface {idSur}
-${idVol2=Id('volume')}
-webcut volume {idVol2} with plane Zplane offset {-3.000000 *km}
 ${idVol3=Id('volume')}
 webcut volume {idVol3} with plane Zplane offset {-30.000000 *km}
 ${idVol4=Id('volume')}
@@ -89,4 +87,5 @@ node in surface fault1 move X {-0.01*m} Y {-0.01*m} Z {-0.01*m}
 node in surface fault2 move X {0.01*m} Y {0.01*m} Z {0.01*m}
 compress all
 set node constraint on
+draw volume all
 # End of file

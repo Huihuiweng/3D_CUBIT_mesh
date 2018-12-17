@@ -1,7 +1,7 @@
-This code is used for creating a 3D mesh (Box and semi-sphere models, see schematic diagram) for Specfem3D. 
+This code is used for creating a 3D mesh (Box and semi-sphere models, see schematic diagram and jpg files in the work directory) for Specfem3D.
 
 The Box model creates four blocks by cutting a long cube with free surface, fault and several planes. The free surface and fault could be planar or curved surface, by setting Interface and Topography as False or True in ./create_box_mesh.py.
-Blocks 2 and 4 are the seismogenic layer, bounded by upper and lower seismogenic planes. Please set up the parameters of seismogenic layer, Upper_cutoff and Lower_cutoff, in the script create_box_mesh.py.  
+Blocks 2 and 4 are the seismogenic layer, bounded by upper and lower seismogenic planes. Please set up the parameters of seismogenic layer, Upper_cutoff and Lower_cutoff, in the script create_box_mesh.py. If Upper_cutoff is a value larger than or equal 0, then the fault cuts through the free surface (i.e., block 1 is removed). The horizontal boundaries of the box domain is aligned with latitude and longitude.
 
 The semi-sphere model creates three blocks. We firstly cut a cylinder with free surface, fault interface and plane (lower seismogenic layer). The semi-sphere is created by cutting a sphere with the free surfce, then subtract block 1 and 2 from the semi-sphere to obtain block 3. Finally we merge all blocks. 
 Block 1 and 2 have a finite seismogenic layer. The fault can cut through the free surface in this model. Please set up Lower_cutoff of seismogenic layer in the script create_semisphere_mesh.py.
@@ -70,15 +70,15 @@ If yes, please set up the ranges and reference point of the model in geographica
 For creating a curved free surface, you need to setup 4 parameters in ./Parameters_for_curved_surfaces.sh:
 Sur_GRD_data     Use a grid-format data or a xyz-format data
 Sur_input_data   Path of the data
-Sur_inc          For grid-format data, we increase the sample rate of grid data, otherwise it need a long time for CUBIT to create a .sat file.
-Sur_sigma        Parameter for the smooth process
+Sur_inc          Increase the sample interval by multiplying the interval of grid-format data by the factor Sur_inc, otherwise it need a long time for CUBIT to create a .sat file.
+Sur_sigma        It is the parameter (sigma) of gaussian_filter in Python. Larger values mean stronger smoothing. The guidelines for gaussian_filter in Python: https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.gaussian_filter.html
 
 For creating a curved fault, you need to setup 5 parameters in ./Parameters_for_curved_surfaces.sh:
 Int_GRD_data     Use a grid-format data or a xyz-format data
 Int_input_data   Path of the data
-Int_inc          For grid-format data, we increase the sample rate of grid data, otherwise it need a long time for CUBIT to create a .sat file.
-Int_sigma        Paremeter for the smooth process
-Int_sample_inc   The sample interval for the xyz-format data. This parameters depends on the slip model (for example Yue Han's model). For other slip model, one needs to change the 
+Int_inc          Increase the sample interval by multiplying the interval of grid-format data by the factor Sur_inc, otherwise it need a long time for CUBIT to create a .sat file.
+Int_sigma        It is the parameter (sigma) of gaussian_filter in Python. Larger values mean stronger smoothing. The guidelines for gaussian_filter in Python: https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.gaussian_filter.html
+Int_sample_inc   The sample interval for the xyz-format data. This parameters depends on the slip model (for example Yue Han's model). For other slip model, one needs to change the text in ./Interface/create_interface_data.sh 
 
 There is a low resolution global topography data in ./Surface/data. The global topography data can be downloaded from NOAA https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/ice_surface/grid_registered/netcdf/ . Put the downloaded data "ETOPO1_Ice_g_gmt4.grd.gz" in the directory ./Surface/data and unzip it by the command "gunzip -k ./Surface/data/ETOPO1_Ice_g_gmt4.grd.gz" (or using other ways to unzip a ~.gz file). The downloaded data file is large (377MB), which contains the global topography data. If you need a higher or lower resolution topograhpy data, please put it in ./Surface/data and set up its path to the new data in ./Parameters_for_curved_surfaces.sh. 
 
