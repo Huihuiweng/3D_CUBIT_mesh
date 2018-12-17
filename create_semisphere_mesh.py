@@ -289,7 +289,7 @@ Vol_num = cubit.get_volume_count()
 for i in range(Vol_num):
     cubit.cmd('block {0} hex in vol {0}'.format(i+1))
 cubit.cmd('block 1000 face in surface ' + str(list(SpheresurfID)).replace("["," ").replace("]"," "))
-cubit.cmd('block 1000 name "face_abbbs"')
+cubit.cmd('block 1000 name "face_abs"')
 cubit.cmd('block 1001 face in surface ' + str(list(FreesurfID)).replace("["," ").replace("]"," "))
 cubit.cmd('block 1001 name "face_topo"')
 
