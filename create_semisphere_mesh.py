@@ -42,13 +42,13 @@ R_cylinder     =  10
 work_dir       = os.getcwd()
 # If Interface is False, then use planar fault (given by the strike, dip, and dep). Otherwise run the scripts in ./Interface and give the path of the created interface (in the directory ./output)
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
-Interface      =  True
-Topography     =  True
+Interface      = True 
+Topography     = True 
 Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
-Top_name       = work_dir + "/output/surface_sigma_1_inc_1.sat"
-Strike         = 90
-Dip            = 60
-Dep            = -10
+Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
+Strike         = 230
+Dip            = 70
+Dep            = -5.7
 
 # Uniform material properties. 
 vp  = 5770     # P wave speed (m/s)
@@ -57,7 +57,7 @@ rho = 2705     # density (g/m^3)
 Q   = 13
 
 # The mesh size (km). Smaller grid size can better sample curved geometries.
-fine_size        = 2
+fine_size        = 4
 coarse_size      = 8
 # The mesh scheme: thex  
 #  Thex: firstly create a tetrahedral unstructured mesh, then convert into a hexahedral mesh (reduce the grid size by hal). This mesh scheme have good flexibility for curved geometries.
@@ -102,13 +102,13 @@ else:
 
 # The name of output mesh file
 if(Interface and Topography):
-    output_mesh    = mesh_name + "_Slab" + Int_name.split("interface")[1].split(".sat")[0] + "_Top" + Top_name.split("surface")[1].split(".sat")[0]
+    output_mesh    = mesh_name + "_semisphere_curvedfault_curvedtopo"
 elif(not Interface and Topography):
-    output_mesh    = mesh_name + "_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_Top" + Top_name.split("surface")[1].split(".sat")[0]
+    output_mesh    = mesh_name + "_semisphere_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_curvedtopo"
 elif(Interface and not Topography):
-    output_mesh    = mesh_name + "_Slab" + Int_name.split("interface")[1].split(".sat")[0] + "_planarsur"
+    output_mesh    = mesh_name + "_semisphere_curvedfault_planarsur"
 else:
-    output_mesh    = mesh_name + "_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_planarsur"
+    output_mesh    = mesh_name + "_semisphere_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_planarsur"
 
 # Add the info of mesh scheme 
 output_mesh = output_mesh + "_" + str(fine_size) + "_" + str(coarse_size) + "_" + element_type
@@ -149,7 +149,7 @@ else:
     j.write("${idInt=Id('surface')}\n")
     j.write("rotate surface {idInt} about Y angle %f\n" % Dip)
     if(Strike != 0):
-        j.write("rotate surface {idInt} about Z angle %f\n" % Strike)
+        j.write("rotate surface {idInt} about Z angle %f\n" % -Strike)
     j.write("surface {idInt} move z {%f*km}\n" % Dep)
 if(Topography):
     j.write("# ----------------------------------------------------------------------\n" + \
@@ -237,8 +237,8 @@ j.write("# ---------------------------------------------------------------------
             "# Seperate nodes on fault.\n" + \
             "# ----------------------------------------------------------------------\n")
 j.write("set node constraint off\n")
-j.write("node in surface fault1 move X {-0.01*m} Y {-0.01*m} Z {-0.01*m}\n")
-j.write("node in surface fault2 move X {0.01*m} Y {0.01*m} Z {0.01*m}\n")
+j.write("node in surface fault1 move normal to surface fault1 distance {-0.01*m}\n")
+j.write("node in surface fault2 move normal to surface fault2 distance {-0.01*m}\n")
 j.write("compress all\n")
 j.write("set node constraint on\n")
 

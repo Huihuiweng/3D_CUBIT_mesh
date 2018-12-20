@@ -45,13 +45,13 @@ Center_Y       = 0
 work_dir       = os.getcwd()
 # If Interface is False, then use planar fault (given by the strike, dip, and dep). Otherwise run the scripts in ./Interface and give the path of the created interface (in the directory ./output)
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
-Interface      = False
-Topography     = False
+Interface      =  True 
+Topography     =  True 
 Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
 Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
-Strike         = 90
-Dip            = 60
-Dep            = -10
+Strike         = 230
+Dip            = 70
+Dep            = -5.7
 
 # Uniform material properties. 
 vp  = 5770     # P wave speed (m/s)
@@ -60,25 +60,25 @@ rho = 2705     # density (g/m^3)
 Q   = 13
 
 # The mesh size (km). Smaller grid size can better sample curved geometries.
-grid_size      = 20
+grid_size      = 4
 # The mesh scheme: thex and map 
 # 1 -> Thex: firstly create a tetrahedral unstructured mesh, then convert into a hexahedral mesh (reduce the grid size by hal). This mesh scheme have good flexibility for curved geometries.
 # 2 -> Map:  meshes all volumes with structured mesh of hexahedra. Before mesh by using this scheme, one needs to adjsut the domension of model box or move box horizontally to make all the surfaces have 4 sides. For example, if the fault cuts a volume that has a triangle surface, then the Map scheme doesn't work.
 # Noted that the final mesh is hexahedral mesh
-#mesh_scheme    = "thex"
-mesh_scheme    = "map"
+mesh_scheme    = "thex"
+#mesh_scheme    = "map"
 # The element type for hexahedral mesh: HEX8 or HEX27 (supported by Specfem3D)
 # Higer order nodes can be moved to curved geometry by defaut, if set Node Constraint ON.
-#element_type = "HEX8"
-element_type = "HEX27"
+element_type = "HEX8"
+#element_type = "HEX27"
 # Refine the mesh of fault. fault_refine_numsplit=0 indicate  no refinement. fault_refine_numsplit (int) indicates how many times to subdivide the elements on fault.  
 # fault_refine_depth indicate the number of layers for refinement.
 fault_refine_numsplit = 0
 fault_refine_depth    = 5
 
 # Set up the upper and lower depth of seimogenic zone. If Upper_cutoff>=0, then there is not upper seismogenic boundary and the fault cut through the free surface.
-#Upper_cutoff   = -3
-Upper_cutoff   =  0
+Upper_cutoff   = -3
+#Upper_cutoff   =  0
 Lower_cutoff   = -30
 
 # The name of CUBIT script. One can run this script under the GUI of CUBIT for debuging. This python code will run this script without GUI.
@@ -113,16 +113,22 @@ else:
 
 # The name of output mesh file
 if(Interface and Topography):
-    output_mesh    = mesh_name + "_Slab" + Int_name.split("interface")[1].split(".sat")[0] + "_Top" + Top_name.split("surface")[1].split(".sat")[0]
+    output_mesh    = mesh_name + "_box_curvedfault_curvedtopo"
 elif(not Interface and Topography):
-    output_mesh    = mesh_name + "_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_Top" + Top_name.split("surface")[1].split(".sat")[0]
+    output_mesh    = mesh_name + "_box_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_curvedtopo"
 elif(Interface and not Topography):
-    output_mesh    = mesh_name + "_Slab" + Int_name.split("interface")[1].split(".sat")[0] + "_planarsur"
+    output_mesh    = mesh_name + "_box_curvedfault_planarsur"
 else:
-    output_mesh    = mesh_name + "_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_planarsur"
+    output_mesh    = mesh_name + "_box_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_planarsur"
+
+# Add the info of upper boundary
+if(Upper_cutoff>=0):
+    output_mesh = output_mesh + "_cutsurf"
+else:
+    output_mesh = output_mesh + "_buried"
 
 # Add the info of mesh scheme 
-output_mesh = output_mesh + "_" + str(grid_size) + "_" + element_type
+output_mesh = output_mesh + "_size" + str(grid_size) + "_" + element_type
 
 # Create the journal file for debuging
 print "Create journal file..."
@@ -170,7 +176,7 @@ else:
     j.write("${idInt=Id('surface')}\n")
     j.write("rotate surface {idInt} about Y angle %f\n" % Dip)
     if(Strike != 0):
-        j.write("rotate surface {idInt} about Z angle %f\n" % Strike)
+        j.write("rotate surface {idInt} about Z angle %f\n" % -Strike)
     j.write("surface {idInt} move z {%f}\n" % Dep)
 if(Topography):
     j.write("# ----------------------------------------------------------------------\n" + \
@@ -268,8 +274,8 @@ j.write("# ---------------------------------------------------------------------
             "# Seperate nodes on fault.\n" + \
             "# ----------------------------------------------------------------------\n")
 j.write("set node constraint off\n")
-j.write("node in surface fault1 move X {-0.01*m} Y {-0.01*m} Z {-0.01*m}\n")
-j.write("node in surface fault2 move X {0.01*m} Y {0.01*m} Z {0.01*m}\n")
+j.write("node in surface fault1 move normal to surface fault1 distance {-0.01*m}\n")
+j.write("node in surface fault2 move normal to surface fault2 distance {-0.01*m}\n")
 j.write("compress all\n")
 j.write("set node constraint on\n")
 
