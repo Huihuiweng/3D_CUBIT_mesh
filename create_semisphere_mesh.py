@@ -15,9 +15,9 @@ import cubit
 print "Init CUBIT..."
 try:
     # print all the information to the screen.
-    # cubit.init([""])
+     cubit.init([""])
     # stop all the outout information and warnings to the screen.
-    cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
+    #cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
 except:
     pass
 from geocubitlib import absorbing_boundary
@@ -42,8 +42,8 @@ R_cylinder     =  10
 work_dir       = os.getcwd()
 # If Interface is False, then use planar fault (given by the strike, dip, and dep). Otherwise run the scripts in ./Interface and give the path of the created interface (in the directory ./output)
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
-Interface      = True 
-Topography     = True 
+Interface      = False 
+Topography     = False
 Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
 Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
 Strike         = 230
@@ -226,8 +226,8 @@ else:
 j.write("# ----------------------------------------------------------------------\n" + \
             "# Smooth mesh to improve quality.\n" + \
             "# ----------------------------------------------------------------------\n")
-#j.write("volume all smooth scheme condition number beta 2.0 cpu 4\n" + \
-#        "smooth volume all\n")
+j.write("volume all smooth scheme condition number beta 2.0 cpu 4\n" + \
+        "smooth volume all\n")
 
 j.write("set unmerge Duplicate_mesh on\n")
 j.write("unmerge surface fault1 only\n")
@@ -241,8 +241,6 @@ j.write("node in surface fault1 move normal to surface fault1 distance {-0.01*m}
 j.write("node in surface fault2 move normal to surface fault2 distance {-0.01*m}\n")
 j.write("compress all\n")
 j.write("set node constraint on\n")
-
-j.write("draw volume all\n")
 
 j.write("# End of file\n")
 j.close()
@@ -289,7 +287,7 @@ Vol_num = cubit.get_volume_count()
 for i in range(Vol_num):
     cubit.cmd('block {0} hex in vol {0}'.format(i+1))
 cubit.cmd('block 1000 face in surface ' + str(list(SpheresurfID)).replace("["," ").replace("]"," "))
-cubit.cmd('block 1000 name "face_abs"')
+cubit.cmd('block 1000 name "face_semisphere"')
 cubit.cmd('block 1001 face in surface ' + str(list(FreesurfID)).replace("["," ").replace("]"," "))
 cubit.cmd('block 1001 name "face_topo"')
 

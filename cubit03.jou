@@ -1,3 +1,11 @@
+## 
+## Trelis Version 14.0.5
+## Trelis Build f9fcf83
+## Revised Tue Oct 15 10:45:06 2013 -0600
+## Running 12/25/2018 11:15:00 AM
+## Command Options:
+## -warning = On
+## -information = On
 # Journal file formatting, etc.
 # ----------------------------------------------------------------------
 # Set units to SI.
@@ -16,8 +24,8 @@ ${idVol1=Id('volume')}
 # ----------------------------------------------------------------------
 create planar surface zplane
 ${idInt=Id('surface')}
-rotate surface {idInt} about Y angle 70.000000
-rotate surface {idInt} about Z angle -230.000000
+rotate surface {idInt} about y angle 70
+rotate surface {idInt} about z angle -230
 surface {idInt} move z {-5.700000*km}
 # ----------------------------------------------------------------------
 # Create planar free surface.
@@ -37,7 +45,7 @@ ${idVol3=Id('volume')}
 find surface overlap volume {idVol2} {idVol3}
 ${idF1=GroupMemberId('surf_overlap','surface',0)}
 ${idF2=GroupMemberId('surf_overlap','surface',1)}
-surface {idF1} name 'fault1'
+surface {idF1} name "fault1"
 # ----------------------------------------------------------------------
 # Create semi-sphere
 # ----------------------------------------------------------------------
@@ -46,7 +54,7 @@ ${idVol4=Id('volume')}
 webcut volume {idVol4} with sheet extended from surface {idSur}
 ${idVol5=Id('volume')}
 ${idround=Id('surface')}
-surface {idround} name 'spheresurf'
+surface {idround} name "spheresurf"
 # ----------------------------------------------------------------------
 # Substract the semi-spehere from the blocks that contain the fault
 # ----------------------------------------------------------------------
@@ -56,7 +64,7 @@ ${idVol6=Id('volume')}
 # Delete unused blocks and surfaces.
 # ----------------------------------------------------------------------
 delete surface all
-delete volume {idVol1} {idVol4} {idVol5} 
+delete volume {idVol1} {idVol4} {idVol5}
 # ----------------------------------------------------------------------
 # imprint and merge.
 # ----------------------------------------------------------------------
@@ -65,25 +73,59 @@ merge all
 # ----------------------------------------------------------------------
 # Generate the mesh.
 # ----------------------------------------------------------------------
-volume all scheme TetMesh
+volume all scheme tetmesh
 volume {idVol2} {idVol3} size {4.000000*km}
-mesh volume {idVol2} 
+mesh volume {idVol2}
 mesh volume {idVol3}
 volume {idVol6} size {8.000000*km}
-mesh volume {idVol6} 
-THex Volume all
+mesh volume {idVol6}
+thex volume all
 # ----------------------------------------------------------------------
 # Smooth mesh to improve quality.
 # ----------------------------------------------------------------------
-set unmerge Duplicate_mesh on
-unmerge surface fault1 only
-surface {idF2} name 'fault2'
+set unmerge duplicate_mesh on
+unmerge fault1 only
+surface {idF2} name "fault2"
 # ----------------------------------------------------------------------
 # Seperate nodes on fault.
 # ----------------------------------------------------------------------
 set node constraint off
-node in surface fault1 move normal to surface fault1 distance {-0.01*m}
-node in surface fault2 move normal to surface fault2 distance {-0.01*m}
+node in fault1 move normal to fault1 distance {-1*m}
+node in fault2 move normal to fault2 distance {-1*m}
 compress all
 set node constraint on
 # End of file
+block 1 hex in volume 1
+block 2 hex in volume 2
+block 3 hex in volume 3
+block 1000 face in surface 8
+block 1000 name "face_abs"
+block 1001 face in surface 2 5 7
+block 1001 name "face_topo"
+block 1 name "elastic 1"
+block 1 attribute count 6
+block 1 attribute index 1 1
+block 1 attribute index 2 5770
+block 1 attribute index 3 3330
+block 1 attribute index 4 2705
+block 1 attribute index 5 13
+block 1 attribute index 6 0
+block 2 name "elastic 2"
+block 2 attribute count 6
+block 2 attribute index 1 1
+block 2 attribute index 2 5770
+block 2 attribute index 3 3330
+block 2 attribute index 4 2705
+block 2 attribute index 5 13
+block 2 attribute index 6 0
+block 3 name "elastic 3"
+block 3 attribute count 6
+block 3 attribute index 1 1
+block 3 attribute index 2 5770
+block 3 attribute index 3 3330
+block 3 attribute index 4 2705
+block 3 attribute index 5 13
+block 3 attribute index 6 0
+compress all
+set info off
+set echo off
