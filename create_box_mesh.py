@@ -8,7 +8,8 @@ import os
 import sys
 # Please set up the path for CUBIT (or Trelis) and GEOCUBIT in your system.
 # Instead, you could set up the path from ~/.bashrc 
-sys.path.append('/opt/linux64/Trelis-14.0/bin/')
+#sys.path.append('/opt/linux64/Trelis-14.0/bin/')
+sys.path.append('/galite2/weng/Disk_backup/Software/CUBIT/bin/')
 sys.path.append('/opt/linux64/specfem3d/CUBIT_GEOCUBIT/')
 
 import cubit
@@ -45,13 +46,13 @@ Center_Y       = 0
 work_dir       = os.getcwd()
 # If Interface is False, then use planar fault (given by the strike, dip, and dep). Otherwise run the scripts in ./Interface and give the path of the created interface (in the directory ./output)
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
-Interface      =  False 
+Interface      =  False
 Topography     =  False 
 Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
 Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
-Strike         = 230
-Dip            = 70
-Dep            = -5.7
+Strike         = 90
+Dip            = 90
+Dep            = 0
 
 # Uniform material properties. 
 vp  = 5770     # P wave speed (m/s)
@@ -60,13 +61,13 @@ rho = 2705     # density (g/m^3)
 Q   = 13
 
 # The mesh size (km). Smaller grid size can better sample curved geometries.
-grid_size      = 4
+grid_size      = 1
 # The mesh scheme: thex and map 
 # 1 -> Thex: firstly create a tetrahedral unstructured mesh, then convert into a hexahedral mesh (reduce the grid size by hal). This mesh scheme have good flexibility for curved geometries.
 # 2 -> Map:  meshes all volumes with structured mesh of hexahedra. Before mesh by using this scheme, one needs to adjsut the domension of model box or move box horizontally to make all the surfaces have 4 sides. For example, if the fault cuts a volume that has a triangle surface, then the Map scheme doesn't work.
 # Noted that the final mesh is hexahedral mesh
-mesh_scheme    = "thex"
-#mesh_scheme    = "map"
+#mesh_scheme    = "thex"
+mesh_scheme    = "map"
 # The element type for hexahedral mesh: HEX8 or HEX27 (supported by Specfem3D)
 # Higer order nodes can be moved to curved geometry by defaut, if set Node Constraint ON.
 element_type = "HEX8"
@@ -79,12 +80,12 @@ fault_refine_depth    = 5
 # Set up the upper and lower depth of seimogenic zone. If Upper_cutoff>=0, then there is not upper seismogenic boundary and the fault cut through the free surface.
 Upper_cutoff   = -3
 #Upper_cutoff   =  0
-Lower_cutoff   = -30
+Lower_cutoff   = -15
 
 # The name of CUBIT script. One can run this script under the GUI of CUBIT for debuging. This python code will run this script without GUI.
-journalFile    = "./output/Kumamoto.jou"
+journalFile    = "./output/Rupture_speed_animation.jou"
 # The name (prefix name) of created mesh directory for Specfem3D. The full name is the prefix name + features of fault and free surface.
-mesh_name      = "Kumamoto"
+mesh_name      = "Rupture_speed_animation"
 #=====================================
 
 

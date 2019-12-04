@@ -42,8 +42,8 @@ R_cylinder     =  10
 work_dir       = os.getcwd()
 # If Interface is False, then use planar fault (given by the strike, dip, and dep). Otherwise run the scripts in ./Interface and give the path of the created interface (in the directory ./output)
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
-Interface      = False 
-Topography     = False
+Interface      = True 
+Topography     = True
 Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
 Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
 Strike         = 230

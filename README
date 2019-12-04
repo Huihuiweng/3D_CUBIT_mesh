@@ -107,6 +107,15 @@ Dep            = -10
 
 Set up other parameters in the first section of create_box_mesh.py and create_semisphere_mesh.py (there are comments), such as dimension of model, materials properties, mesh scheme, mesh size, and output name. 
 
+For mesh scheme, you need to set up the grid size, mesh scheme (thex or map), element type, or mesh refinement.
+grid_size      = 1
+mesh_scheme   = "thex"
+#mesh_scheme    = "map"
+element_type   = "HEX8"
+#element_type  = "HEX27"
+fault_refine_numsplit = 0
+fault_refine_depth    = 5
+
 
 3. Run the script for the box model by type
    python create_box_mesh.py
