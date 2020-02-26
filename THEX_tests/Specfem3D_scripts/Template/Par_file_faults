@@ -1,0 +1,16 @@
+1                                               ! number of faults
+0.00134                                         ! #tag #eta(damping)
+1                                               ! 1 = dyn 2=kin
+1000                                            ! NTOUT : Number of time steps
+key_movie_steps                                 ! NTSNAP: time interation of snapshots
+-1.0                                            ! V_HEALING (-1 : Healing off)
+1e-3                                            ! V_RUPT
+
+&RUPTURE_SWITCHES RATE_AND_STATE=.false.,TPV16=.false., TWF=.true./
+
+&BEGIN_FAULT /
+&STRESS_TENSOR Sigma=0e0,0e0,0e0,0e0,0e0,0e0/
+&INIT_STRESS S1=key_tau_0, S2=key_tau_1, S3=key_normal /
+&SWF mus=10000.0e0, nmus=1, mud=key_mu_d, dc=key_dc/
+&DIST2D shapeval='rectangle', val = key_mu_s, xc =  0e0, yc =0e0, zc=  0.0e0, lx=key_lx, ly=key_ly, lz=key_lz /
+&TWF nuc_x=key_nucx, nuc_y=key_nucy, nuc_z=key_nucz, nuc_r=key_nucr, nuc_t0=key_nuct0, nuc_v=key_nucv/
