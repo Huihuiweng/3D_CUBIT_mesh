@@ -52,6 +52,7 @@ Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
 Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
 Strike         = 90
 Dip            = 90
+# Indicating the vertical location of one reference point on fault, i.e., (0.0, 0.0, Dep)
 Dep            = 0
 
 # Uniform material properties. 

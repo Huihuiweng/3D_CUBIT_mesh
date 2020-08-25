@@ -48,6 +48,7 @@ Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
 Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
 Strike         = 230
 Dip            = 70
+# Indicating the vertical location of one reference point on fault, i.e., (0.0, 0.0, Dep)
 Dep            = -5.7
 
 # Uniform material properties. 
@@ -57,6 +58,7 @@ rho = 2705     # density (g/m^3)
 Q   = 13
 
 # The mesh size (km). Smaller grid size can better sample curved geometries.
+# fine_size is for the inner cylinder and coarse_size for the outside semisphere
 fine_size        = 4
 coarse_size      = 8
 # The mesh scheme: thex  
