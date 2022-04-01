@@ -7,8 +7,8 @@ import numpy
 import os
 import sys
 # Please set up the path for CUBIT (or Trelis) and GEOCUBIT in your system.
-# Instead, you could set up the path from ~/.bashrc 
-sys.path.append('/opt/linux64/Trelis-14.0/bin/')
+# It requires CUBIT version 14.0.5 or later
+sys.path.append('/opt/linux64/Trelis/bin/')
 sys.path.append('/opt/linux64/specfem3d/CUBIT_GEOCUBIT/')
 
 import cubit

@@ -7,18 +7,17 @@ import numpy
 import os
 import sys
 # Please set up the path for CUBIT (or Trelis) and GEOCUBIT in your system.
-# Instead, you could set up the path from ~/.bashrc 
-#sys.path.append('/opt/linux64/Trelis-14.0/bin/')
-sys.path.append('/galite2/weng/Disk_backup/Software/CUBIT/bin/')
+# It requires CUBIT version 14.0.5 or later
+sys.path.append('/opt/linux64/Trelis/bin/')
 sys.path.append('/opt/linux64/specfem3d/CUBIT_GEOCUBIT/')
 
 import cubit
 print "Init CUBIT..."
 try:
     # print all the information to the screen.
-    # cubit.init([""])
+     cubit.init([""])
     # stop all the outout information and warnings to the screen.
-    cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
+    #cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
 except:
     pass
 from geocubitlib import absorbing_boundary
