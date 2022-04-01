@@ -32,8 +32,8 @@ from geocubitlib import cubit2specfem3d
 
 # If DEBUG is True, then this script only create CUBIT script, otherwise create CUBIT script and mesh file.
 # It is recommended to debug this script by GUI of CUBIT before to create Specfem3D mesh.
-#DEBUG          = True
-DEBUG          = False
+DEBUG          = True
+#DEBUG          = False
 
 # The dimension of model box (km)
 Length         = 120   
@@ -271,7 +271,8 @@ j.write("volume all smooth scheme condition number beta 2.0 cpu 4\n" + \
 j.write("set unmerge Duplicate_mesh on\n")
 j.write("unmerge surface fault1 only\n")
 j.write("surface {idF2} name 'fault2'\n")
-j.write("unmerge curve in surface fault1\n")
+j.write("${surcurve=GroupMemberId('fault1','surface',2)}\n")
+j.write("unmerge curve {surcurve}\n")
 
 j.write("# ----------------------------------------------------------------------\n" + \
             "# Seperate nodes on fault.\n" + \

@@ -31,8 +31,8 @@ from geocubitlib import cubit2specfem3d
 
 # If DEBUG is True, then this script only create CUBIT script, otherwise create CUBIT script and mesh file.
 # It is recommended to debug this script by GUI of CUBIT before to create Specfem3D mesh.
-#DEBUG          = True
-DEBUG          = False
+DEBUG          = True
+#DEBUG          = False
 
 # The radius of the semi-sphere (km)
 R_model        =  100
@@ -42,8 +42,8 @@ R_cylinder     =  10
 work_dir       = os.getcwd()
 # If Interface is False, then use planar fault (given by the strike, dip, and dep). Otherwise run the scripts in ./Interface and give the path of the created interface (in the directory ./output)
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
-Interface      = True 
-Topography     = True
+Interface      = False 
+Topography     = False
 Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
 Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
 Strike         = 230
@@ -234,7 +234,7 @@ j.write("volume all smooth scheme condition number beta 2.0 cpu 4\n" + \
 j.write("set unmerge Duplicate_mesh on\n")
 j.write("unmerge surface fault1 only\n")
 j.write("surface {idF2} name 'fault2'\n")
-j.write("unmerge curve in surface fault1\n")
+#j.write("unmerge curve in surface fault1\n")
 
 j.write("# ----------------------------------------------------------------------\n" + \
             "# Seperate nodes on fault.\n" + \
