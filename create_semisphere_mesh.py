@@ -11,19 +11,6 @@ import sys
 sys.path.append('/opt/linux64/Trelis/bin/')
 sys.path.append('/opt/linux64/specfem3d/CUBIT_GEOCUBIT/')
 
-import cubit
-print "Init CUBIT..."
-try:
-    # print all the information to the screen.
-     cubit.init([""])
-    # stop all the outout information and warnings to the screen.
-    #cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
-except:
-    pass
-from geocubitlib import absorbing_boundary
-from geocubitlib import save_fault_nodes_elements
-from geocubitlib import cubit2specfem3d
-
 #=====================================
 #    Set up parameters             ===
 #=====================================
@@ -85,22 +72,22 @@ mesh_name      = "Kumamoto"
 # There is no need to change anything below. If you need to change something,
 # please send me an email. I will try to make it more automatic.
 #
-print "Initial check..."
+print("Initial check...")
 # Initial check
 if(not os.path.isfile(Int_name) and Interface):
-    print "The interface data does not exis!!! Please create it in ./Interface."
+    print("The interface data does not exis!!! Please create it in ./Interface.")
     exit()
 elif(os.path.isfile(Int_name) and Interface):
-    print "Using interface slab: ", Int_name
+    print("Using interface slab: ", Int_name)
 else:
-    print "Using planar fault with strike: ", Strike, " dip: ", Dip, " depth(reference point): ", Dep
+    print("Using planar fault with strike: ", Strike, " dip: ", Dip, " depth(reference point): ", Dep)
 
 if(not os.path.isfile(Top_name) and Topography):
-    print "The topography data does not exis!!! Please create it in ./Surface."
+    print("The topography data does not exis!!! Please create it in ./Surface.")
 elif(os.path.isfile(Top_name) and Topography):
-    print "Using topography: ", Top_name
+    print("Using topography: ", Top_name)
 else:
-    print "Using planar topography."
+    print("Using planar topography.")
 
 # The name of output mesh file
 if(Interface and Topography):
@@ -119,7 +106,7 @@ output_mesh = output_mesh + "_" + str(fine_size) + "_" + str(coarse_size) + "_" 
 L_cylinder = abs(2 * Lower_cutoff)
 
 # Create the journal file for debuging
-print "Create journal file..."
+print("Create journal file...")
 j = open(journalFile, 'w')
 j.write("# Journal file formatting, etc.\n" + \
             "# ----------------------------------------------------------------------\n" + \
@@ -222,7 +209,7 @@ if(mesh_scheme == "thex"):
     j.write("mesh volume {idVol6} \n")
     j.write("THex Volume all\n")
 else:
-    print "Error mesh scheme!"
+    print("Error mesh scheme!")
     exit()
 
 j.write("# ----------------------------------------------------------------------\n" + \
@@ -251,10 +238,24 @@ j.close()
 if(DEBUG):
    exit() 
 
+import cubit
+print("Init CUBIT...")
+try:
+    # print all the information to the screen.
+     cubit.init([""])
+    # stop all the outout information and warnings to the screen.
+    #cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
+except:
+    pass
+from geocubitlib import absorbing_boundary
+from geocubitlib import save_fault_nodes_elements
+from geocubitlib import cubit2specfem3d
+
+
 # ==================================================
 #        Read the CUBIT journal and playback it.
 # ==================================================
-print "Playback journal file..."
+print("Playback journal file...")
 with open(journalFile) as f:
     content = f.readlines()
 for line in content:
@@ -264,8 +265,8 @@ for line in content:
 #         Save the mesh to txt files
 #      This part is revised from the code of Specfem3D
 # ==================================================
-print ""
-print "Convert mesh to Specfem-format..."
+print("")
+print("Convert mesh to Specfem-format...")
 os.system('mkdir -p MESH')
 
 ## fault surfaces (up/down)
@@ -284,7 +285,7 @@ for k in list_surf:
     if abs(center_point[2]) <= freesur_tolerance:
          FreesurfID.append(k)
 
-print SpheresurfID,FreesurfID
+print(SpheresurfID,FreesurfID)
 # define blocks
 Vol_num = cubit.get_volume_count()
 for i in range(Vol_num):
@@ -317,7 +318,7 @@ else:
 # You need to create fault mesh file in the last, if using hex27.
 faultA = save_fault_nodes_elements.fault_input(1,Au,Ad)
 
-print "Save created mesh..."
+print("Save created mesh...")
 # Save create directory as given name
 os.system('rm -rf  output/' + output_mesh)
 os.system('mv MESH output/' + output_mesh)
