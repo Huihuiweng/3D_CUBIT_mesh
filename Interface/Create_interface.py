@@ -59,7 +59,7 @@ if(Int_GRD_data == 1):
     for i in range(lon.shape[0]):
         for j in range(lat.shape[0]):
             if(lon[i]>=X1 and lon[i]<=X2 and lat[j]>=Y1 and lat[j]<=Y2):
-                 XYZ.append([(lon[i]-(Lon_ref))*Lon_scale*1e3, (lat[j]-(Lat_ref))*Lat_scale*1e3, 1z[i,j]*1e3])
+                 XYZ.append([(lon[i]-(Lon_ref))*Lon_scale*1e3, (lat[j]-(Lat_ref))*Lat_scale*1e3, -z[i,j]*1e3])
     XYZ = np.array(XYZ)
 else:
    # Read text data 
