@@ -20,12 +20,12 @@ Lat_ref=32.76
 
 # Python path
 # Or set up the full path for python manually in your system
-Work_dir="/home/weng/Works/Softwares/3D_CUBIT_mesh/"
 sys.path.append('/home/weng/Works/Softwares/Coreform-Cubit-2024.3+46968-Lin64/Coreform-Cubit-2024.3/bin/')
 
 #Sur_GRD_data=0           # do not use grid data
 Sur_GRD_data=1           # do use grid data
-Sur_input_data=Work_dir+"/Surface/data/Local_topo.grd"
+Work_dir      = os.getcwd()
+Sur_input_data= Work_dir+"/data/Local_topo.grd"
 ###  Resample grid interval
 grid_size = 10e3
 ### Smooth parameter
