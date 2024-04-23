@@ -32,13 +32,15 @@ Center_Y       = 0
 work_dir       = os.getcwd()
 # If Interface is False, then use planar fault (given by the strike, dip, and dep). Otherwise run the scripts in ./Interface and give the path of the created interface (in the directory ./output)
 # If Topography is False, then use planar surface. Otherwise run the scripts in ./Surface and give the path of the created planarsur (in the directory ./output)
-Interface      =  False
-Topography     =  False 
-Int_name       = work_dir + "/output/interface_sigma_1_inc_12.sat"
-Top_name       = work_dir + "/output/surface_sigma_1_inc_12.sat"
+Interface      =  True
+Topography     =  True
+Int_name       = work_dir + "/CUBIT_sat/slabInterface_sigma_10_inc_1000.0.sat"
+Top_name       = work_dir + "/CUBIT_sat/surface_sigma_10_inc_10000.0.sat"
+
+# Needed when Interface is False
+# Indicating the vertical location of one reference point on fault, i.e., (0.0, 0.0, Dep)
 Strike         = 90
 Dip            = 90
-# Indicating the vertical location of one reference point on fault, i.e., (0.0, 0.0, Dep)
 Dep            = 0
 
 # Uniform material properties. 
@@ -166,6 +168,7 @@ else:
     if(Strike != 0):
         j.write("rotate surface {idInt} about Z angle %f\n" % -Strike)
     j.write("surface {idInt} move z {%f}\n" % Dep)
+
 if(Topography):
     j.write("# ----------------------------------------------------------------------\n" + \
             "# Import topography data\n" + \
@@ -189,7 +192,7 @@ j.write("# ---------------------------------------------------------------------
         "# Webcut 1 block to 5 blocks.\n" + \
         "# ----------------------------------------------------------------------\n")
 if(Upper_cutoff<0):
-    j.write("webcut volume {idVol1} with sheet surface {idSur}\n")
+    j.write("webcut volume {idVol1} with sheet extended from surface {idSur}\n")
     j.write("${idVol2=Id('volume')}\n")
     j.write("webcut volume {idVol2} with plane Zplane offset {%f *km}\n" % Upper_cutoff)
     j.write("${idVol3=Id('volume')}\n")
@@ -198,7 +201,7 @@ if(Upper_cutoff<0):
     j.write("webcut volume {idVol4} with sheet surface {idBot}\n")
     j.write("${idVol5=Id('volume')}\n")
 else:
-    j.write("webcut volume {idVol1} with sheet surface {idSur}\n")
+    j.write("webcut volume {idVol1} with sheet extended from surface {idSur}\n")
     j.write("${idVol3=Id('volume')}\n")
     j.write("webcut volume {idVol3} with plane Zplane offset {%f *km}\n" % Lower_cutoff)
     j.write("${idVol4=Id('volume')}\n")
@@ -207,7 +210,7 @@ else:
 
 
 if(Interface):
-    j.write("webcut volume {idVol3} with sheet surface {idInt}\n")
+    j.write("webcut volume {idVol3} with sheet extended from surface {idInt}\n")
 else:
     j.write("webcut volume {idVol3} with plane surface {idInt}\n")
 j.write("${idVol6=Id('volume')}\n")
