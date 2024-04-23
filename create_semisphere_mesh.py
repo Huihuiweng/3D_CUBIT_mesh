@@ -1,6 +1,7 @@
 #!python
 # Create 3D mesh files.
 # Huihui Weng (Geoazur, 2018)
+# Revised NJU, 2024
 
 # ======================================================================
 import numpy
@@ -8,8 +9,7 @@ import os
 import sys
 # Please set up the path for CUBIT (or Trelis) and GEOCUBIT in your system.
 # It requires CUBIT version 14.0.5 or later
-sys.path.append('/opt/linux64/Trelis/bin/')
-sys.path.append('/opt/linux64/specfem3d/CUBIT_GEOCUBIT/')
+sys.path.append('/home/weng/Works/Softwares/Coreform-Cubit-2024.3+46968-Lin64/Coreform-Cubit-2024.3/bin/')
 
 #=====================================
 #    Set up parameters             ===
@@ -60,7 +60,7 @@ element_type = "HEX8"
 # Set up the lower depth of seimogenic zone. The rupture can propogate to the free surface here.
 Lower_cutoff   = -30
 # The name of CUBIT script. One can run this script under the GUI of CUBIT for debuging. This python code will run this script without GUI.
-journalFile    = "./output/Kumamoto.jou"
+journalFile    = "./journals/Kumamoto.jou"
 # The name (prefix name) of created mesh directory for Specfem3D. The full name is the prefix name + features of fault and free surface.
 mesh_name      = "Kumamoto"
 #=====================================
@@ -221,7 +221,13 @@ j.write("volume all smooth scheme condition number beta 2.0 cpu 4\n" + \
 j.write("set unmerge Duplicate_mesh on\n")
 j.write("unmerge surface fault1 only\n")
 j.write("surface {idF2} name 'fault2'\n")
-#j.write("unmerge curve in surface fault1\n")
+### 
+### I don't find a smart way to find the id of the curve on fault surface
+### The user can find the correct number from GUI cubit and replace 1 with the correct number
+#j.write("${surcurve=GroupMemberId('idF1','surface',1)}\n")
+#j.write("unmerge curve {surcurve}\n")
+j.write("unmerge curve 1\n")
+
 
 j.write("# ----------------------------------------------------------------------\n" + \
             "# Seperate nodes on fault.\n" + \
@@ -247,6 +253,7 @@ try:
     #cubit.init(["-noecho","-nojournal","-information=off","-warning=off"])
 except:
     pass
+sys.path.append('./geocubitlib/')
 from geocubitlib import absorbing_boundary
 from geocubitlib import save_fault_nodes_elements
 from geocubitlib import cubit2specfem3d
