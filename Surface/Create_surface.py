@@ -72,10 +72,9 @@ else:
     XYZ  = np.zeros((data.shape[0],3))
     for i in range(data.shape[0]):
         if(data[i,0]>=X1 and data[i,0]<=X2 and data[i,1]>=Y1 and data[i,1]<=Y2):
-             data[i,0] = (data[i,0]-(Lon_ref))*Lon_scale*1e3
-             data[i,1] = (data[i,1]-(Lat_ref))*Lat_scale*1e3
-             data[i,2] = data[i,2]
-    XYZ = data
+             XYZ[i,0] = (data[i,0]-(Lon_ref))*Lon_scale*1e3
+             XYZ[i,1] = (data[i,1]-(Lat_ref))*Lat_scale*1e3
+             XYZ[i,2] = data[i,2]
 
 X_lower  = np.min(XYZ[:,0])
 X_upper  = np.max(XYZ[:,0])

@@ -6,15 +6,6 @@ from   scipy.interpolate     import griddata
 from   scipy.ndimage.filters import gaussian_filter
 
 ###  Setup reference point and range ####
-# This parameters are only for the curved free surface or fault
-# X1 and X2 are the lower and upper range of longitude
-# Y1 and Y2 are the lower and upper range of latitude
-# Lon_ref and Lat_ref are the reference point (i.e., (0,0) in Cartesian coordinates)
-# It is a good choice to set up it as the epicenter.
-X1=129.0
-X2=133.5
-Y1=31.2
-Y2=34.7
 Lon_ref=130.76
 Lat_ref=32.76
 
@@ -58,8 +49,7 @@ if(Int_GRD_data == 1):
     XYZ  = []
     for i in range(lon.shape[0]):
         for j in range(lat.shape[0]):
-            if(lon[i]>=X1 and lon[i]<=X2 and lat[j]>=Y1 and lat[j]<=Y2):
-                 XYZ.append([(lon[i]-(Lon_ref))*Lon_scale*1e3, (lat[j]-(Lat_ref))*Lat_scale*1e3, -z[i,j]*1e3])
+            XYZ.append([(lon[i]-(Lon_ref))*Lon_scale*1e3, (lat[j]-(Lat_ref))*Lat_scale*1e3, -z[i,j]*1e3])
     XYZ = np.array(XYZ)
 else:
    # Read text data 
@@ -71,11 +61,9 @@ else:
     data = np.array(lines,dtype=float)
     XYZ  = np.zeros((data.shape[0],3))
     for i in range(data.shape[0]):
-        if(data[i,0]>=X1 and data[i,0]<=X2 and data[i,1]>=Y1 and data[i,1]<=Y2):
-             data[i,0] = (data[i,0]-(Lon_ref))*Lon_scale*1e3
-             data[i,1] = (data[i,1]-(Lat_ref))*Lat_scale*1e3
-             data[i,2] = -data[i,2]*1e3
-    XYZ = data
+        XYZ[i,0] = (data[i,0]-(Lon_ref))*Lon_scale*1e3
+        XYZ[i,1] = (data[i,1]-(Lat_ref))*Lat_scale*1e3
+        XYZ[i,2] = -data[i,2]*1e3
 
 X_lower  = np.min(XYZ[:,0])
 X_upper  = np.max(XYZ[:,0])
