@@ -50,18 +50,17 @@ if( not os.path.exists(Int_input_data)):
 
 if(Int_GRD_data == 1):
     # Read GRID-format data
-    with open(Int_input_data, 'br') as files:
-         content = files.readlines()
-    lines=[]
-    for line in content:
-        lines.append(line.rstrip().split(" "))
-    data = np.array(lines,dtype=float)
-    for i in range(data.shape[0]):
-        if(data[i,0]>=X1 and data[i,1]<=X2 and data[i,1]>=Y1 and data[i,1]<=Y2):
-             data[i,0] = (data[i,0]-(Lon_ref))*Lon_scale*1e3
-             data[i,1] = (data[i,1]-(Lat_ref))*Lat_scale*1e3
-             data[i,2] = -data[i,2]*1e3
-    XYZ = data
+    import xarray as xr
+    data = xr.open_dataset(Sur_input_data)
+    lon  = data['lon'].values.astype(float)
+    lat  = data['lat'].values.astype(float)
+    z    = data['z'].values.astype(float)
+    XYZ  = []
+    for i in range(lon.shape[0]):
+        for j in range(lat.shape[0]):
+            if(lon[i]>=X1 and lon[i]<=X2 and lat[j]>=Y1 and lat[j]<=Y2):
+                 XYZ.append([(lon[i]-(Lon_ref))*Lon_scale*1e3, (lat[j]-(Lat_ref))*Lat_scale*1e3, 1z[i,j]*1e3])
+    XYZ = np.array(XYZ)
 else:
    # Read text data 
     with open(Int_input_data, 'r') as files:
