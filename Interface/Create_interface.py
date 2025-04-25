@@ -14,7 +14,8 @@ Lat_ref=32.76
 
 sys.path.append('/home/weng/Works/Softwares/Coreform-Cubit-2024.3+46968-Lin64/Coreform-Cubit-2024.3/bin/')
 
-Int_GRD_data=0           # do not use grid data
+# The in data format is: Lon, Lat, Depth(positive)
+Int_GRD_data=0           # do not use grid data. 
 #GRD_data=1           # do use grid data
 Work_dir      = os.getcwd()
 Int_input_data= Work_dir+"/data/Slip_model_kumamoto.dat"
@@ -58,7 +59,8 @@ else:
          content = files.readlines()
     lines=[]
     for line in content:
-        lines.append(line.rstrip().split(" "))
+        if(line[0]=="#"): continue
+        lines.append(line.rstrip().split())
     data = np.array(lines,dtype=float)
     XYZ  = np.zeros((data.shape[0],3))
     for i in range(data.shape[0]):

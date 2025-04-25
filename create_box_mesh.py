@@ -19,13 +19,14 @@ sys.path.append('/home/weng/Works/Softwares/Coreform-Cubit-2024.3+46968-Lin64/Co
 # If DEBUG is True, then this script only create CUBIT script, otherwise create CUBIT script and mesh file.
 # It is recommended to debug this script by GUI of CUBIT before to create Specfem3D mesh.
 DEBUG          = True
-#DEBUG          = False
+DEBUG          = False
 
 # The dimension of model box (km)
 Length         = 120   
 Width          = 80
 Depth          = 60
 # Move the box horizontally to be inside the range of interface and free surface (km)
+# Adjust them to make the fault line in the middle of the domain
 Center_X       = 0
 Center_Y       = 0
 

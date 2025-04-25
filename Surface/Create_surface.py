@@ -22,6 +22,7 @@ Lat_ref=32.76
 # Or set up the full path for python manually in your system
 sys.path.append('/home/weng/Works/Softwares/Coreform-Cubit-2024.3+46968-Lin64/Coreform-Cubit-2024.3/bin/')
 
+# The in data format is: Lon, Lat, Elevation
 #Sur_GRD_data=0           # do not use grid data
 Sur_GRD_data=1           # do use grid data
 Work_dir      = os.getcwd()
@@ -67,7 +68,8 @@ else:
          content = files.readlines()
     lines=[]
     for line in content:
-        lines.append(line.rstrip().split(" "))
+        if(line[0]=="#"): continue
+        lines.append(line.rstrip().split())
     data = np.array(lines,dtype=float)
     XYZ  = np.zeros((data.shape[0],3))
     for i in range(data.shape[0]):
