@@ -26,7 +26,7 @@ Length         = 120
 Width          = 80
 Depth          = 60
 # Move the box horizontally to be inside the range of interface and free surface (km)
-# Adjust them to make the fault line in the middle of the domain
+# Adjust them to make the fault line in the middle of the domain.
 Center_X       = 0
 Center_Y       = 0
 
@@ -67,10 +67,10 @@ element_type = "HEX8"
 fault_refine_numsplit = 0
 fault_refine_depth    = 5
 
-# Set up the upper and lower depth of seimogenic zone. If Upper_cutoff>=0, then there is not upper seismogenic boundary and the fault cut through the free surface.
-#Upper_cutoff   = -3
+# Set up the upper and lower depth of seimogenic zone. If Upper_cutoff==0, then there is no upper seismogenic boundary and the fault cut through the free surface.
+# Lower_cutoff depth shall be smaller than the domain depth !!!
 Upper_cutoff   =  0
-Lower_cutoff   = -15
+Lower_cutoff   = 15
 
 # The name of CUBIT script. One can run this script under the GUI of CUBIT for debuging. This python code will run this script without GUI.
 journalFile    = "./journals/Rupture_speed_animation.jou"
@@ -113,7 +113,7 @@ else:
     output_mesh    = mesh_name + "_box_planarfault" + "_strike_" + str(Strike) + "_dip_" + str(Dip) + "_depth_" + str(Dep) + "_planarsur"
 
 # Add the info of upper boundary
-if(Upper_cutoff>=0):
+if(Upper_cutoff==0):
     output_mesh = output_mesh + "_cutsurf"
 else:
     output_mesh = output_mesh + "_buried"
@@ -192,19 +192,19 @@ j.write("${idBot=Id('surface')}\n")
 j.write("# ----------------------------------------------------------------------\n" + \
         "# Webcut 1 block to 5 blocks.\n" + \
         "# ----------------------------------------------------------------------\n")
-if(Upper_cutoff<0):
+if(Upper_cutoff==0):
     j.write("webcut volume {idVol1} with sheet extended from surface {idSur}\n")
-    j.write("${idVol2=Id('volume')}\n")
-    j.write("webcut volume {idVol2} with plane Zplane offset {%f *km}\n" % Upper_cutoff)
     j.write("${idVol3=Id('volume')}\n")
-    j.write("webcut volume {idVol3} with plane Zplane offset {%f *km}\n" % Lower_cutoff)
+    j.write("webcut volume {idVol3} with plane Zplane offset {%f *km}\n" % -Lower_cutoff)
     j.write("${idVol4=Id('volume')}\n")
     j.write("webcut volume {idVol4} with sheet surface {idBot}\n")
     j.write("${idVol5=Id('volume')}\n")
 else:
     j.write("webcut volume {idVol1} with sheet extended from surface {idSur}\n")
+    j.write("${idVol2=Id('volume')}\n")
+    j.write("webcut volume {idVol2} with plane Zplane offset {%f *km}\n" % -Upper_cutoff)
     j.write("${idVol3=Id('volume')}\n")
-    j.write("webcut volume {idVol3} with plane Zplane offset {%f *km}\n" % Lower_cutoff)
+    j.write("webcut volume {idVol3} with plane Zplane offset {%f *km}\n" % -Lower_cutoff)
     j.write("${idVol4=Id('volume')}\n")
     j.write("webcut volume {idVol4} with sheet surface {idBot}\n")
     j.write("${idVol5=Id('volume')}\n")
@@ -261,7 +261,7 @@ j.write("volume all smooth scheme condition number beta 2.0 cpu 4\n" + \
 j.write("set unmerge Duplicate_mesh on\n")
 j.write("unmerge surface fault1 only\n")
 j.write("surface {idF2} name 'fault2'\n")
-if(Upper_cutoff>=0):
+if(Upper_cutoff==0):
     ### 
     ### I don't find a smart way to find the id of the curve on fault surface
     ### The user can find the correct number from GUI cubit and replace 75 with the correct number
